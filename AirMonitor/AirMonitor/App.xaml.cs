@@ -12,15 +12,19 @@ namespace AirMonitor
 {
     public partial class App : Application
     {
-
+       // public static DatabaseHelper DbHelper { get; set; }
 
         public App()
-        {
-            GetJSON();
+        {     
             InitializeComponent();
-            
-            MainPage = new RootTabbedPage();
+            Initialization();
+        }
 
+        public void Initialization()
+        {
+            //DbHelper = new DatabaseHelper();
+            GetJSON();
+            MainPage = new RootTabbedPage();
         }
 
         private void GetJSON()

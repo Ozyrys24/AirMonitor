@@ -6,6 +6,20 @@ namespace AirMonitor.Models
 {
     public class Installation
     {
+        public Installation()
+        {
+
+        }
+
+        public Installation(InstallationEntity installationEntity)
+        {
+            this.Id = installationEntity.Id;
+            this.Location = JsonConvert.DeserializeObject<Location>(installationEntity.Location);
+            this.Address = JsonConvert.DeserializeObject<Address>(installationEntity.Address);
+            this.Elevation = installationEntity.Elevation;
+            this.IsAirlyInstallation = installationEntity.IsAirlyInstallation;
+        }
+
         public string Id { get; set; }
         public Location Location { get; set; }
         public Address Address { get; set; }

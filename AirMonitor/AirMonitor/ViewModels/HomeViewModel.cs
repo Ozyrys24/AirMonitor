@@ -19,8 +19,14 @@ namespace AirMonitor.ViewModels
     internal class HomeViewModel : BaseViewModel
     {
         private readonly HttpClient Client = new HttpClient();
+        private IEnumerable<Installation> _installations;
+        private IEnumerable<Measurement> data;
+        private Location location;
+        private DateTime tillTime;
 
         private readonly INavigation _navigation;
+
+        public IEnumerable<Installation> Installations { get; set; }
         public HomeViewModel(INavigation navigation)
         {
             _navigation = navigation;
@@ -63,11 +69,23 @@ namespace AirMonitor.ViewModels
         {
             IsBusy = true;
 
-            var location = await GetLocation();
-            var installations = await GetInstallations(location, maxResults: 3);
-            var data = await GetMeasurementsForInstallations(installations);
+            //tillTime = App.DbHelper.GetTime();
+           // bool test = (location != await GetLocation() && (tillTime < DateTime.Now.Subtract(new TimeSpan(1, 0, 0)) || tillTime > DateTime.Now));
+           // if (location != await GetLocation() && (tillTime < DateTime.Now.Subtract(new TimeSpan(1,0,0)) || tillTime > DateTime.Now))
+            //{
+                location = await GetLocation();
+                Installations = await GetInstallations(location, maxResults: 3);
+                data = await GetMeasurementsForInstallations(Installations);
+            //} 
+            //else
+            //{
+            //    installations = App.DbHelper.GetInstallation();
+            //    data = App.DbHelper.GetMeasurement();
+            //}
             Items = new List<Measurement>(data);
-
+            //App.DbHelper.InstallationSave(installations);
+            //App.DbHelper.MeasurementSave(data);
+                
             IsBusy = false;
         }
 
@@ -78,6 +96,8 @@ namespace AirMonitor.ViewModels
                 System.Diagnostics.Debug.WriteLine("No location data.");
                 return null;
             }
+
+           // App.DbHelper.SetTime();
 
             string query = GetQuery(new Dictionary<string, object>
             {
